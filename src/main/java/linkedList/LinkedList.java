@@ -5,21 +5,11 @@ import java.util.ArrayList;
 public class LinkedList {
     public Node head;
     public Node tail;
-    private int size;
 
 
     public LinkedList() {
         head = null;
         tail = null;
-        this.size = 0;
-    }
-
-    public void addInHead(Node item) {
-        Node tmpHead = this.head;
-        this.head = item;
-        if (tmpHead != null)
-            this.head.next = tmpHead;
-        ++this.size;
     }
 
     public void addInTail(Node item) {
@@ -29,8 +19,6 @@ public class LinkedList {
             this.tail.next = item;
         }
         this.tail = item;
-
-        ++this.size;
     }
 
     public Node find(int value) {
@@ -45,7 +33,6 @@ public class LinkedList {
 
     public ArrayList<Node> findAll(int _value) {
         ArrayList<Node> nodes = new ArrayList<>();
-        if (this.size == 0) return nodes;
         Node node = this.head;
         while (node != null) {
             if (node.value == _value)
@@ -56,86 +43,87 @@ public class LinkedList {
     }
 
     public boolean remove(int _value) {
-        if (this.size == 0) return false;
-        Node prev = null;
-        Node current = this.head;
-        while (current != null) {
-            if (current.value == _value) {
-                unlinkNode(prev, current);
-                return true;
-            } else {
-                prev = current;
-                current = current.next;
+        if (head == null) {
+            assert (tail == null);
+            return false;
+        }
+
+        if (head.value == _value) {
+            if (head == tail) {
+                tail = null;
             }
+            head = head.next;
+            return true;
+        }
+
+        Node prev = head;
+        Node curr = head.next;
+        while (curr != null) {
+            if (curr.value == _value) {
+                prev.next = curr.next;
+                if (curr == tail)
+                    tail = prev;
+                return true;
+            }
+            prev = curr;
+            curr = curr.next;
         }
         return false;
     }
 
-    private void unlinkNode(Node prev, Node current) {
-        Node nextNode = current.next;
-        boolean isTail = (nextNode == null);
-        if (isTail) {
-            if (prev == null) {
-                head = null;
-            } else {
-                prev.next = null;
-            }
-            tail = prev;
-        } else {
-            current.next = nextNode.next;
-            current.value = nextNode.value;
-        }
-        --this.size;
-    }
-
     public void removeAll(int _value) {
-        if (this.size == 0) return;
-        Node prev = null;
-        Node node = this.head;
-        while (node != null) {
-            if (node.value == _value) {
-                if (prev != null) {
-                    prev.next = node.next;
-                    if (node.next == null) {
-                        this.tail = prev;
-                    }
-                } else {
-                    this.head = this.head.next;
-                    if (this.head == null) {
-                        this.tail = null;
-                    }
-                }
-            } else {
-                prev = node;
+        LinkedList newList = new LinkedList();
+        Node curr = head;
+        while (curr != null) {
+            if (curr.value != _value) {
+                newList.addInTail(new Node(curr.value));
             }
-            node = node.next;
+            curr = curr.next;
         }
+        head = newList.head;
+        tail = newList.tail;
     }
 
     public void clear() {
-        if (this.size == 0) return;
-        Node next;
-        for (Node curr = this.head; curr != null; curr = next) {
-            next = curr.next;
-            curr.next = null;
-        }
-        this.head = null;
-        this.tail = null;
-        this.size = 0;
+        head = null;
+        tail = null;
     }
 
     public int count() {
-        return size;
+        int count = 0;
+        Node curr = head;
+        while (curr != null) {
+            count++;
+            curr = curr.next;
+        }
+        return count;
     }
 
     public void insertAfter(Node _nodeAfter, Node _nodeToInsert) {
-        if (this.tail == _nodeAfter) {
-            addInTail(_nodeToInsert);
-        } else if (_nodeAfter == null) {
-            addInHead(_nodeToInsert);
-        } else {
-            _nodeToInsert.next = _nodeAfter.next;
-            _nodeAfter.next = _nodeToInsert;
+        if (head == null && _nodeAfter == null) {
+            assert (tail == null);
+            head = _nodeToInsert;
+            tail = _nodeToInsert;
+            return;
+        }
+
+        if (_nodeAfter == null) {
+            _nodeToInsert.next = head;
+            head = _nodeToInsert;
+            return;
+        }
+
+        Node curr = head;
+        while (curr != null) {
+            if (curr == _nodeAfter) {
+                _nodeToInsert.next = curr.next;
+                curr.next = _nodeToInsert;
+                if (curr == tail) {
+                    tail = _nodeToInsert;
+                }
+                return;
+            }
+            curr = curr.next;
         }
     }
 }
