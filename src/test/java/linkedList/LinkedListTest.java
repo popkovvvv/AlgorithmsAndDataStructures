@@ -1,190 +1,236 @@
 package linkedList;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Linked list tests")
 public class LinkedListTest {
 
     @Test
-    void clearTest() {
+    void findAllInEmptyList() {
+        LinkedList list = new LinkedList();
+        assertEquals(0, list.findAll(1).size());
+    }
+
+    @Test
+    void findAll() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(3));
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(2));
+        list.addInTail(new Node(2));
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(2));
+        list.addInTail(new Node(1));
+
+        assertEquals(5, list.findAll(1).size());
+    }
+
+    @Test
+    void removeFromEmptyList() {
+        LinkedList list = new LinkedList();
+        assertFalse(list.remove(5));
+        assertNull(list.head);
+        assertNull(list.tail);
+    }
+
+    @Test
+    void removeFromOneItemList() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        assertTrue(list.remove(1));
+        assertNull(list.head);
+        assertNull(list.tail);
+    }
+
+    @RepeatedTest(100)
+    void removeFromLargeList() {
+        LinkedList list = new LinkedList();
+        Random rnd = new Random();
+        for (int i = 0; i < 1000; i++) {
+            list.addInTail(new Node(rnd.nextInt(10)));
+        }
+        assertTrue(list.remove(1));
+    }
+
+    @Test
+    void remove() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(3));
+        list.addInTail(new Node(5));
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(3));
+
+        assertTrue(list.remove(1));
+        Node node = list.head;
+        assertEquals(3, node.value);
+        node = node.next;
+        assertEquals(5, node.value);
+        node = node.next;
+        assertEquals(3, node.value);
+        assertEquals(3, list.tail.value);
+    }
+
+    @Test
+    void removeFirstItem() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(3));
+        for (int i = 0; i < 10; i++) {
+            list.addInTail(new Node(1));
+        }
+        assertTrue(list.remove(3));
+        assertEquals(1, list.head.value);
+    }
+
+    @Test
+    void removeLastItem() {
+        LinkedList list = new LinkedList();
+        for (int i = 0; i < 10; i++) {
+            list.addInTail(new Node(1));
+        }
+        list.addInTail(new Node(3));
+        list.addInTail(new Node(7));
+        assertTrue(list.remove(7));
+        assertEquals(3, list.tail.value);
+    }
+
+    @Test
+    void removeAll() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(3));
+        for (int i = 0; i < 10; i++) {
+            list.addInTail(new Node(1));
+        }
+        list.addInTail(new Node(2));
+        list.addInTail(new Node(7));
+        list.addInTail(new Node(1));
+
+        list.removeAll(1);
+
+        Node node = list.head;
+        assertEquals(3, node.value);
+        node = node.next;
+        assertEquals(2, node.value);
+        node = node.next;
+        assertEquals(7, node.value);
+        assertEquals(7, list.tail.value);
+
+    }
+
+    @Test
+    void removeAllFromEmptyList() {
+        LinkedList list = new LinkedList();
+        list.removeAll(1);
+        assertNull(list.head);
+        assertNull(list.tail);
+    }
+
+    @Test
+    void removeAllFromOneItemList() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        list.removeAll(1);
+        assertNull(list.head);
+        assertNull(list.tail);
+    }
+
+    @Test
+    void clearEmptyList() {
         LinkedList list = new LinkedList();
         list.clear();
-        Assertions.assertNull(list.head);
-        Assertions.assertNull(list.tail);
-        Assertions.assertEquals(0, list.count());
-    }
-
-
-    @Test
-    void removeFailedTest() {
-        LinkedList list = new LinkedList();
-        list.add(123);
-        list.add(12345);
-        Assertions.assertFalse(list.remove(78));
+        assertNull(list.head);
+        assertNull(list.tail);
     }
 
     @Test
-    void removeAllTest() {
+    void clearOneItemList() {
         LinkedList list = new LinkedList();
-        for (int i = 0; i < 1000; i++) {
-            list.add(i);
-        }
-        for (int i = 0; i < 1000; i++) {
-            list.add(i);
-        }
-        Assertions.assertEquals(2000, list.count());
-        list.removeAll(555);
-        Assertions.assertEquals(1998, list.count());
-    }
-
-    @Test
-    void removeAllIfEmptyListTest() {
-        LinkedList list = new LinkedList();
-        list.removeAll(999);
-        Assertions.assertEquals(0, list.count());
-    }
-
-    @Test
-    void removeAllIfTwoInListTest() {
-        LinkedList list = new LinkedList();
-        list.add(23);
-        list.add(23);
-        Assertions.assertEquals(2, list.count());
-        list.removeAll(23);
-        Assertions.assertEquals(0, list.count());
-    }
-
-    @Test
-    void removeAllIfOneInCorrectListTest() {
-        LinkedList list = new LinkedList();
-        list.add(999);
-        list.removeAll(999);
-        Assertions.assertEquals(0, list.count());
-    }
-
-    @Test
-    void removeIfEmpty() {
-        LinkedList list = new LinkedList();
-        Assertions.assertFalse(list.remove(34));
-    }
-
-    @Test
-    void removeIfOneElementContains() {
-        LinkedList list = new LinkedList();
-        list.add(20);
-        Assertions.assertTrue(list.remove(20));
-    }
-
-    @Test
-    void findTest() {
-        LinkedList list = new LinkedList();
-        for (int i = 0; i < 1000; i++) {
-            list.add(i);
-        }
-        for (int i = 0; i < 1000; i++) {
-            list.add(i);
-        }
-        Assertions.assertNotNull(list.find(201));
-    }
-
-    @Test
-    void notFoundTest() {
-        LinkedList list = new LinkedList();
-        list.add(20);
-        list.add(202);
-        list.add(202);
-        list.add(201);
-        list.add(20);
-        Assertions.assertNull(list.find(78));
-    }
-
-    @Test
-    void removeTest() {
-        LinkedList list = new LinkedList();
-        list.add(10);
-        list.add(10);
-        Assertions.assertTrue(list.remove(10));
-        Assertions.assertTrue(list.remove(10));
-        Assertions.assertNull(list.find(10));
-    }
-
-    @Test
-    void getAllTest() {
-        LinkedList list = new LinkedList();
-        Node node = new Node(25);
-        Node node2 = new Node(25);
-        Node node3 = new Node(40);
-        Node node4 = new Node(24);
-        Node node5 = new Node(25);
-        list.addInTail(node);
-        list.addInTail(node2);
-        list.addInTail(node3);
-        list.addInTail(node4);
-        list.addInTail(node5);
-        Assertions.assertEquals(list.findAll(25), Arrays.asList(node, node2, node5));
-    }
-
-    @Test
-    void getAllNotFoundTest() {
-        LinkedList list = new LinkedList();
-        Node node = new Node(25);
-        Node node2 = new Node(25);
-        Node node3 = new Node(40);
-        Node node4 = new Node(24);
-        Node node5 = new Node(25);
-        list.addInTail(node);
-        list.addInTail(node2);
-        list.addInTail(node3);
-        list.addInTail(node4);
-        list.addInTail(node5);
-        Assertions.assertEquals(list.findAll(23), List.of());
-    }
-
-    @Test
-    void countTest() {
-        LinkedList list = new LinkedList();
-        list.add(123);
-        list.add(123);
-        list.add(321);
-        Assertions.assertEquals(3, list.count());
-    }
-
-    @Test
-    void clearIfEmptyListTest() {
-        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
         list.clear();
-        Assertions.assertEquals(0, list.count());
+        assertNull(list.head);
+        assertNull(list.tail);
     }
 
     @Test
-    void clearIfOneInListTest() {
+    void clearLargeList() {
         LinkedList list = new LinkedList();
-        list.add(2323);
+        Random rnd = new Random();
+        for (int i = 0; i < 1000; i++) {
+            list.addInTail(new Node(rnd.nextInt(100)));
+        }
         list.clear();
-        Assertions.assertEquals(0, list.count());
+        assertNull(list.head);
+        assertNull(list.tail);
     }
 
     @Test
-    void addInTailIfListEmptyTest() {
+    void countLargeList() {
         LinkedList list = new LinkedList();
-        list.add(2323);
-        Assertions.assertEquals(list.head, list.tail);
+        Random rnd = new Random();
+        for (int i = 0; i < 10000; i++) {
+            list.addInTail(new Node(rnd.nextInt(100)));
+        }
+        assertEquals(10000, list.count());
     }
 
     @Test
-    void insertAfterTest() {
+    void countEmptyList() {
         LinkedList list = new LinkedList();
-        Node node1 = new Node(20);
-        Node node2 = new Node(30);
-        Node nodeToAdd = new Node(54);
-        list.addInTail(node1);
-        list.addInTail(node2);
-        list.insertAfter(node2, nodeToAdd);
-        list.insertAfter(null, nodeToAdd);
-        Assertions.assertEquals(list.tail, nodeToAdd);
-        Assertions.assertEquals(list.head, nodeToAdd);
+        assertEquals(0, list.count());
+    }
+
+    @Test
+    void count() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(1));
+        assertEquals(3, list.count());
+    }
+
+    @Test
+    void insertAfterInEmptyList() {
+        LinkedList list = new LinkedList();
+        list.insertAfter(null, new Node(5));
+        assertEquals(5, list.head.value);
+        assertEquals(5, list.tail.value);
+    }
+
+    @Test
+    void insertAfterOneItemList() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        list.insertAfter(list.find(1), new Node(555));
+        Node node = list.head;
+        assertEquals(1, node.value);
+        node = node.next;
+        assertEquals(555, node.value);
+        assertEquals(555, list.tail.value);
+    }
+
+    @Test
+    void insertAfter() {
+        LinkedList list = new LinkedList();
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(1));
+        list.addInTail(new Node(5));
+        list.insertAfter(list.find(1), new Node(555));
+        Node node = list.head;
+        assertEquals(1, node.value);
+        node = node.next;
+        assertEquals(555, node.value);
+        node = node.next;
+        assertEquals(1, node.value);
+        node = node.next;
+        assertEquals(5, node.value);
+        assertEquals(5, list.tail.value);
     }
 }

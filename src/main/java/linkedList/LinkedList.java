@@ -22,11 +22,6 @@ public class LinkedList {
         ++this.size;
     }
 
-    public void add(int value) {
-        Node node = new Node(value);
-        addInTail(node);
-    }
-
     public void addInTail(Node item) {
         if (this.head == null) {
             this.head = item;
@@ -61,62 +56,55 @@ public class LinkedList {
     }
 
     public boolean remove(int _value) {
-        if (this.size == 0) return false;
         Node prev = null;
-        Node current = this.head;
-        while (current != null) {
-            if (current.value == _value) {
-                unlinkNode(prev, current);
+        Node node = this.head;
+        while (node != null) {
+            if (node.value == _value) {
+                if (prev != null) {
+                    prev.next = node.next;
+                    if (node.next == null) {
+                        this.tail = prev;
+                    }
+                } else {
+                    this.head = this.head.next;
+                    if (this.head == null) {
+                        this.tail = null;
+                    }
+                }
                 return true;
-            } else {
-                prev = current;
-                current = current.next;
             }
+            prev = node;
+            node = node.next;
         }
         return false;
     }
 
-    private void unlinkNode(Node prev, Node current) {
-        Node nextNode = current.next;
-        boolean isTail = (nextNode == null);
-        if (isTail) {
-            if (prev == null) {
-                head = null;
-            } else {
-                prev.next = null;
-            }
-            tail = prev;
-        } else {
-            current.next = nextNode.next;
-            current.value = nextNode.value;
-        }
-        --this.size;
-    }
-
     public void removeAll(int _value) {
         if (this.size == 0) return;
-        Node prevNode = null;
+        Node prev = null;
         Node node = this.head;
         while (node != null) {
             if (node.value == _value) {
-                Node tmp = node.next;
-                unlinkNode(prevNode, node);
-                prevNode = node;
-                node = tmp;
-                continue;
+                if (prev != null) {
+                    prev.next = node.next;
+                    if (node.next == null) {
+                        this.tail = prev;
+                    }
+                } else {
+                    this.head = this.head.next;
+                    if (this.head == null) {
+                        this.tail = null;
+                    }
+                }
+            } else {
+                prev = node;
             }
-            prevNode = node;
             node = node.next;
         }
     }
 
     public void clear() {
         if (this.size == 0) return;
-        Node next;
-        for (Node curr = this.head; curr != null; curr = next) {
-            next = curr.next;
-            curr.next = null;
-        }
         this.head = null;
         this.tail = null;
         this.size = 0;
