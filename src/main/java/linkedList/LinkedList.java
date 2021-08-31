@@ -99,6 +99,8 @@ public class LinkedList {
         while (node != null) {
             if (node.value == _value) {
                 unlinkNode(prevNode, node);
+                prevNode = node;
+                node = node.next;
                 continue;
             }
             prevNode = node;

@@ -1,11 +1,15 @@
-import linkedList.LinkedList;
+package linkedList;
+
 import org.junit.jupiter.api.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @DisplayName("Linked list tests")
 public class LinkedListTest {
 
     @Test
-    static void clearTest() {
+    void clearTest() {
         LinkedList list = new LinkedList();
         list.clear();
         Assertions.assertNull(list.head);
@@ -29,8 +33,31 @@ public class LinkedListTest {
             list.add(i);
         }
         Assertions.assertEquals(1000, list.count());
-        list.removeAll(123);
+        list.removeAll(999);
         Assertions.assertEquals(999, list.count());
+    }
+
+    @Test
+    void removeAllIfEmptyListTest() {
+        LinkedList list = new LinkedList();
+        list.removeAll(999);
+        Assertions.assertEquals(0, list.count());
+    }
+
+    @Test
+    void removeAllIfOneInListTest() {
+        LinkedList list = new LinkedList();
+        list.add(23);
+        list.removeAll(999);
+        Assertions.assertEquals(1, list.count());
+    }
+
+    @Test
+    void removeAllIfOneInCorrectListTest() {
+        LinkedList list = new LinkedList();
+        list.add(999);
+        list.removeAll(999);
+        Assertions.assertEquals(0, list.count());
     }
 
     @Test
@@ -79,17 +106,37 @@ public class LinkedListTest {
         Assertions.assertNull(list.find(999999));
     }
 
-//    @Test
-//    void getAllTest() {
-//        LinkedList list = new LinkedList();
-//        list.add(20);
-//        list.add(56);
-//        list.add(232);
-//        list.add(56);
-//        list.add(20);
-//        list.add(20);
-//        Assertions.assertEquals(list.findAll(20), Arrays.asList(20, 20, 20));
-//    }
+    @Test
+    void getAllTest() {
+        LinkedList list = new LinkedList();
+        Node node = new Node(25);
+        Node node2 = new Node(25);
+        Node node3 = new Node(40);
+        Node node4 = new Node(24);
+        Node node5 = new Node(25);
+        list.addInTail(node);
+        list.addInTail(node2);
+        list.addInTail(node3);
+        list.addInTail(node4);
+        list.addInTail(node5);
+        Assertions.assertEquals(list.findAll(25), Arrays.asList(node, node2, node5));
+    }
+
+    @Test
+    void getAllNotFoundTest() {
+        LinkedList list = new LinkedList();
+        Node node = new Node(25);
+        Node node2 = new Node(25);
+        Node node3 = new Node(40);
+        Node node4 = new Node(24);
+        Node node5 = new Node(25);
+        list.addInTail(node);
+        list.addInTail(node2);
+        list.addInTail(node3);
+        list.addInTail(node4);
+        list.addInTail(node5);
+        Assertions.assertEquals(list.findAll(23), List.of());
+    }
 
     @Test
     void countTest() {
