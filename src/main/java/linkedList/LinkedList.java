@@ -28,10 +28,11 @@ public class LinkedList {
     }
 
     public void addInTail(Node item) {
-        if (this.head == null)
+        if (this.head == null) {
             this.head = item;
-        else
+        } else {
             this.tail.next = item;
+        }
         this.tail = item;
 
         ++this.size;
@@ -49,6 +50,7 @@ public class LinkedList {
 
     public ArrayList<Node> findAll(int _value) {
         ArrayList<Node> nodes = new ArrayList<>();
+        if (this.size == 0) return nodes;
         Node node = this.head;
         while (node != null) {
             if (node.value == _value)
@@ -59,6 +61,7 @@ public class LinkedList {
     }
 
     public boolean remove(int _value) {
+        if (this.size == 0) return false;
         Node prev = null;
         Node current = this.head;
         while (true) {
@@ -90,6 +93,7 @@ public class LinkedList {
     }
 
     public void removeAll(int _value) {
+        if (this.size == 0) return;
         Node prevNode = null;
         Node node = this.head;
         while (node != null) {
@@ -103,6 +107,7 @@ public class LinkedList {
     }
 
     public void clear() {
+        if (this.size == 0) return;
         Node next;
         for (Node curr = this.head; curr != null; curr = next) {
             next = curr.next;
@@ -126,17 +131,6 @@ public class LinkedList {
             _nodeToInsert.next = _nodeAfter.next;
             _nodeAfter.next = _nodeToInsert;
         }
-    }
-
-    @Override
-    public String toString() {
-        ArrayList<Integer> res = new ArrayList<>();
-        Node node = this.head;
-        while (node != null) {
-            res.add(node.value);
-            node = node.next;
-        }
-        return res.toString();
     }
 }
 
