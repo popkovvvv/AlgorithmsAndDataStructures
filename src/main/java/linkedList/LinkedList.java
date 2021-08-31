@@ -64,14 +64,16 @@ public class LinkedList {
         if (this.size == 0) return false;
         Node prev = null;
         Node current = this.head;
-        while (true) {
-            if (current == null) return false;
-            if (current.value == _value) break;
-            prev = current;
-            current = current.next;
+        while (current != null) {
+            if (current.value == _value) {
+                unlinkNode(prev, current);
+                return true;
+            } else {
+                prev = current;
+                current = current.next;
+            }
         }
-        unlinkNode(prev, current);
-        return true;
+        return false;
     }
 
     private void unlinkNode(Node prev, Node current) {
@@ -84,7 +86,6 @@ public class LinkedList {
                 prev.next = null;
             }
             tail = prev;
-
         } else {
             current.next = nextNode.next;
             current.value = nextNode.value;
@@ -98,9 +99,10 @@ public class LinkedList {
         Node node = this.head;
         while (node != null) {
             if (node.value == _value) {
+                Node tmp = node.next;
                 unlinkNode(prevNode, node);
                 prevNode = node;
-                node = node.next;
+                node = tmp;
                 continue;
             }
             prevNode = node;

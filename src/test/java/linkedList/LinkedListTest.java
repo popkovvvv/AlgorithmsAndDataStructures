@@ -32,9 +32,12 @@ public class LinkedListTest {
         for (int i = 0; i < 1000; i++) {
             list.add(i);
         }
-        Assertions.assertEquals(1000, list.count());
-        list.removeAll(999);
-        Assertions.assertEquals(999, list.count());
+        for (int i = 0; i < 1000; i++) {
+            list.add(i);
+        }
+        Assertions.assertEquals(2000, list.count());
+        list.removeAll(555);
+        Assertions.assertEquals(1998, list.count());
     }
 
     @Test
@@ -45,11 +48,13 @@ public class LinkedListTest {
     }
 
     @Test
-    void removeAllIfOneInListTest() {
+    void removeAllIfTwoInListTest() {
         LinkedList list = new LinkedList();
         list.add(23);
-        list.removeAll(999);
-        Assertions.assertEquals(1, list.count());
+        list.add(23);
+        Assertions.assertEquals(2, list.count());
+        list.removeAll(23);
+        Assertions.assertEquals(0, list.count());
     }
 
     @Test
@@ -99,11 +104,11 @@ public class LinkedListTest {
     @Test
     void removeTest() {
         LinkedList list = new LinkedList();
-        for (int i = 0; i < 50000; i++) {
-            list.add(i);
-        }
-        Assertions.assertTrue(list.remove(5999));
-        Assertions.assertNull(list.find(999999));
+        list.add(10);
+        list.add(10);
+        Assertions.assertTrue(list.remove(10));
+        Assertions.assertTrue(list.remove(10));
+        Assertions.assertNull(list.find(10));
     }
 
     @Test
@@ -163,9 +168,23 @@ public class LinkedListTest {
     }
 
     @Test
-    void addInTailIfListEmpty() {
+    void addInTailIfListEmptyTest() {
         LinkedList list = new LinkedList();
         list.add(2323);
         Assertions.assertEquals(list.head, list.tail);
+    }
+
+    @Test
+    void insertAfterTest() {
+        LinkedList list = new LinkedList();
+        Node node1 = new Node(20);
+        Node node2 = new Node(30);
+        Node nodeToAdd = new Node(54);
+        list.addInTail(node1);
+        list.addInTail(node2);
+        list.insertAfter(node2, nodeToAdd);
+        list.insertAfter(null, nodeToAdd);
+        Assertions.assertEquals(list.tail, nodeToAdd);
+        Assertions.assertEquals(list.head, nodeToAdd);
     }
 }
