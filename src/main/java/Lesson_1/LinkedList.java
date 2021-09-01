@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class LinkedList {
     public Node head;
     public Node tail;
+    private int size;
 
 
     public LinkedList() {
@@ -19,6 +20,7 @@ public class LinkedList {
             this.tail.next = item;
         }
         this.tail = item;
+        ++this.size;
     }
 
     public Node find(int value) {
@@ -53,6 +55,7 @@ public class LinkedList {
                 tail = null;
             }
             head = head.next;
+            --this.size;
             return true;
         }
 
@@ -63,6 +66,7 @@ public class LinkedList {
                 prev.next = curr.next;
                 if (curr == tail)
                     tail = prev;
+                --this.size;
                 return true;
             }
             prev = curr;
@@ -90,13 +94,7 @@ public class LinkedList {
     }
 
     public int count() {
-        int count = 0;
-        Node curr = head;
-        while (curr != null) {
-            count++;
-            curr = curr.next;
-        }
-        return count;
+        return size;
     }
 
     public void insertAfter(Node _nodeAfter, Node _nodeToInsert) {
@@ -110,6 +108,7 @@ public class LinkedList {
         if (_nodeAfter == null) {
             _nodeToInsert.next = head;
             head = _nodeToInsert;
+            ++this.size;
             return;
         }
 
@@ -121,6 +120,7 @@ public class LinkedList {
                 if (curr == tail) {
                     tail = _nodeToInsert;
                 }
+                ++this.size;
                 return;
             }
             curr = curr.next;
