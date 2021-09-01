@@ -9,10 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Linked list sum tests")
 class LinkedListSumTest {
     @Test
-    public void testSum_emptyLists() {
+    public void testSumEmptyLists() {
         LinkedList list1 = new LinkedList();
         LinkedList list2 = new LinkedList();
-        assertEquals(0, LinkedListSum.sum(list1, list2).count());
+        LinkedList result = LinkedListSum.sum(list1, list2);
+        assertNull(result);
     }
 
     @Test
