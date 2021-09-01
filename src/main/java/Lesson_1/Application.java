@@ -1,8 +1,4 @@
-package linkedList;
-
-import linkedList.LinkedList;
-
-import java.util.stream.Collectors;
+package Lesson_1;
 
 public class Application {
     public static void main(String[] args) {
